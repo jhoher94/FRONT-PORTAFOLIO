@@ -16,7 +16,7 @@ export default function Programador() {
         e.preventDefault()
         const programador={nombre,email,telefono,descripcion,imagen}
         console.log(programador)
-        fetch("http://" ,{
+        fetch("http://localhost:8080/programador/add" ,{
             method:"POST",
             headers:{"content-type":"application/json"},
             body:JSON.stringify(programador)

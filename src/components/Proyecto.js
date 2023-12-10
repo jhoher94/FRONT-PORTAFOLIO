@@ -18,7 +18,7 @@ export default function Proyecto() {
         e.preventDefault()
         const proyecto={nombre,descripcion,imagen,linkgithub,fecha,lenguaje}
         console.log(proyecto)
-        fetch("http://" ,{
+        fetch("http://localhost:8080/proyecto/add" ,{
             method:"POST",
             headers:{"content-type":"application/json"},
             body:JSON.stringify(proyecto)

@@ -1,25 +1,48 @@
-import * as React from 'react';
+import React, { useEffect, useState } from 'react';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
-import { Paper, Typography, Button } from '@mui/material';
+import { Paper, Typography, Button, Grid } from '@mui/material';
 import { Link } from 'react-router-dom';
+
 
 export default function Appbar() {
 
-    const paperStyle= {padding:'50px 20px', width:600,margin:'20px auto'}
-    const [proyecto,setProyectos]=React.useState([])
+    const paperStyle= {padding:'20px 20px', width:1000,margin:'10px auto', display: 'flex',
+    flexDirection: 'column',
+  }
 
-    React.useEffect(()=>{
-        fetch("")
+    const urlRegex = /^(ftp|http|https):\/\/[^ "]+$/;
+
+    const [proyecto,setProyectos]=React.useState([])
+    const [programador,setProgramadores]=React.useState([])
+
+    useEffect(()=>{
+        fetch("http://localhost:8080/proyecto/getAll")
         .then(res=>res.json())
         .then((result)=>{
             setProyectos(result);
+            console.log(result)
         }
         )
-    },[])
+    },
+    
+    // Obtener la lista de programadores
+    fetch("http://localhost:8080/programador/getAll")
+    .then((res) => res.json())
+    .then((result) => {
+    setProgramadores(result);
+    console.log(result);
+    })
+
+    ,[])
+
+    // Función para validar si una cadena sigue el formato de una URL
+    const isValidUrl = (url) => {
+    return urlRegex.test(url);
+    };
 
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -46,20 +69,99 @@ export default function Appbar() {
         </Toolbar>
       </AppBar>
       <h1>PROYECTOS</h1>
-            <Paper elevation={3} style={paperStyle}>
-                {proyecto.map(proyecto=>(
-                    <Paper elevation={6} style={{margin:"10px",padding:"15px",textAlign:"left"}} key={proyecto.id}>
-                    Id:{proyecto.id}
-                    Nombre:{proyecto.nombre}
-                    Descripcion:{proyecto.descripcion}
-                    Imagen:{proyecto.imagen}
-                    LinkGitHub:{proyecto.linkgithub}
-                    Fecha:{proyecto.fecha}
-                    Lenguaje:{proyecto.lenguaje}
-                    </Paper>
-                )
-                )}
-            </Paper>
+      <Paper elevation={1} style={paperStyle}>
+        <Grid container spacing={2}>
+          {proyecto.map((proyecto, index) => (
+            <Grid item xs={12} sm={6} key={proyecto.id}>
+              <Paper
+                elevation={6}
+                style={{
+                  margin: '10px',
+                  padding: '15px',
+                  textAlign: 'left',
+                  backgroundColor: '#1976d2', // Color de fondo del proyecto,
+                }}
+              >
+                <div style={{ flex: 1, borderRadius: '5px', overflow: 'hidden' }}>
+                  <img
+                    src={proyecto.imagen}
+                    alt={`Imagen del proyecto ${proyecto.nombre}`}
+                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                  />
+                </div>
+                <div style={{ fontSize: '1.5em', fontWeight: 'bold' }}>
+                  {proyecto.nombre}
+                </div>
+                <div>
+                  Id: {proyecto.id}
+                </div>
+                <div>
+                  Descripcion: {proyecto.descripcion}
+                </div>
+                <div>
+                  LinkGitHub: {isValidUrl(proyecto.linkgithub) ? (
+                    <a href={proyecto.linkgithub} target="_blank" rel="noopener noreferrer">
+                      {proyecto.linkgithub}
+                    </a>
+                  ) : (
+                    "URL no válida"
+                  )}
+                </div>
+                <div>
+                  Fecha: {proyecto.fecha}
+                </div>
+                <div>
+                  Lenguaje: {proyecto.lenguaje}
+                </div>
+              </Paper>
+            </Grid>
+          ))}
+        </Grid>
+      </Paper>
+
+
+      <h1>PROGRAMADORES</h1>
+      <Paper elevation={1} style={paperStyle}>
+        <Grid container spacing={2}>
+          {programador.map((programador, index) => (
+            <Grid item xs={12} sm={6} key={proyecto.id}>
+              <Paper
+                elevation={6}
+                style={{
+                  margin: '10px',
+                  padding: '15px',
+                  textAlign: 'left',
+                  backgroundColor: '#1976d2',
+                }}
+              >
+                <div style={{ flex: 1, borderRadius: '5px', overflow: 'hidden' }}>
+                  <img
+                    src={programador.imagen}
+                    alt={`Imagen del programador ${programador.imagen}`}
+                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                  />
+                </div>
+                <div style={{ fontSize: '1.5em', fontWeight: 'bold' }}>
+                  {programador.nombre}
+                </div>
+                <div>
+                  Id: {programador.id}
+                </div>
+                <div>
+                  Descripcion: {programador.descripcion}
+                </div>
+                <div>
+                  Email: {programador.email}
+                </div>
+                <div>
+                  Telefono: {programador.telefono}
+                </div>
+              </Paper>
+            </Grid>
+          ))}
+        </Grid>
+      </Paper>
+
     </Box>
     
   );
