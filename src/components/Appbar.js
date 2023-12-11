@@ -19,27 +19,29 @@ export default function Appbar() {
     const [proyecto,setProyectos]=React.useState([])
     const [programador,setProgramadores]=React.useState([])
 
-    useEffect(()=>{
-        fetch("http://localhost:8080/proyecto/getAll")
-        .then(res=>res.json())
-        .then((result)=>{
-            setProyectos(result);
-            console.log(result)
+    useEffect(() => {
+      const fetchData = async () => {
+        try {
+          const proyectosResponse = await fetch("http://localhost:8080/proyecto/getAll");
+          const proyectosResult = await proyectosResponse.json();
+          setProyectos(proyectosResult);
+          console.log(proyectosResult);
+
+          const programadoresResponse = await fetch("http://localhost:8080/programador/getAll");
+          const programadoresResult = await programadoresResponse.json();
+          setProgramadores(programadoresResult);
+          console.log(programadoresResult);
+        } catch (error) {
+          console.error("Error fetching data:", error);
         }
-        )
-    },
+      };
     
-    // Obtener la lista de programadores
-    fetch("http://localhost:8080/programador/getAll")
-    .then((res) => res.json())
-    .then((result) => {
-    setProgramadores(result);
-    console.log(result);
-    })
+      fetchData(); 
+    
+    }, []);
 
-    ,[])
 
-    // Función para validar si una cadena sigue el formato de una URL
+
     const isValidUrl = (url) => {
     return urlRegex.test(url);
     };

@@ -11,7 +11,7 @@ export default function Programador() {
     const [telefono,setTelefono]=React.useState('')
     const [descripcion,setDescripcion]= React.useState('')
     const [imagen,setImagen]= React.useState('')
-
+    
     const handleClick=(e)=>{
         e.preventDefault()
         const programador={nombre,email,telefono,descripcion,imagen}
@@ -87,6 +87,11 @@ export default function Programador() {
       </Button>
     </Box>
     </Paper>
+
+
+
+
+
     </Container>
   );
 }
